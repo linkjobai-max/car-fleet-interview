@@ -1,0 +1,26 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Car Fleet in Coding Interviews: Sort by Position, Compare Arrival Times</title>
+<style>body{font-family:sans-serif;max-width:720px;margin:40px auto;line-height:1.5}pre{background:#f4f4f4;padding:12px}</style></head><body>
+<h1>Car Fleet in Coding Interviews: Sort by Position, Compare Arrival Times</h1>
+<h2>The problem</h2>
+<p>LeetCode 853: n cars drive toward the same target on a one-lane road. Car i starts at position[i] with speed[i]. A car can never pass the car ahead; when it catches up, they move together as one fleet at the slower speed. Return how many fleets arrive at the target.</p>
+<h2>The key observation</h2>
+<p>Simulating time steps is messy and slow. Instead, compute each car's arrival time if it drove alone: (target - position) / speed. A car only joins a fleet ahead of it, never one behind it, so process cars from the one closest to the target backwards.</p>
+<p>Walking backwards, keep the arrival time of the current lead fleet. If the next car would arrive later than that time, it can never catch up, so it starts a new fleet and becomes the new lead. If it would arrive earlier or at the same time, it catches up and merges, and its own time no longer matters.</p>
+<h2>Code</h2>
+<pre>def car_fleet(target, position, speed):
+    cars = sorted(zip(position, speed), reverse=True)
+    fleets, lead_time = 0, 0.0
+    for pos, spd in cars:
+        t = (target - pos) / spd
+        if t &gt; lead_time:
+            fleets += 1
+            lead_time = t
+    return fleets</pre>
+<h2>Complexity and what to say</h2>
+<p>Sorting costs O(n log n) and the scan is O(n), with O(n) extra space for the pairs. Many solutions use a stack of times, but you only ever look at its top, so a single variable is enough. Point that out; interviewers like seeing you simplify a stack you do not need.</p>
+<p>Edge cases worth naming: a car exactly at the target position (time 0), equal times that merge exactly at the target (they count as one fleet, hence the strict greater-than), and floating point. If precision worries the interviewer, compare (target - p1) * s2 against (target - p2) * s1 with integers.</p>
+<h2>Follow-ups</h2>
+<p>Car Fleet II (LeetCode 1776) asks for the time each car collides with the next fleet; it uses a monotonic stack from the right and is a good next problem. The same sort-then-sweep pattern shows up in meeting merges and in skyline-style questions.</p>
+<h2>Disclosure</h2>
+<p>I work on Linkjob AI, an assistant that gives real-time hints in technical interviews. More notes and the tool are at <a href="https://www.linkjob.ai/">Linkjob AI interview assistant</a>.</p>
+</body></html>
