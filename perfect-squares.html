@@ -1,0 +1,23 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Perfect Squares: BFS Levels vs Bottom-Up DP (and the Four-Square Shortcut)</title><style>body{max-width:720px;margin:40px auto;padding:0 16px;font-family:system-ui,sans-serif;line-height:1.6}pre{background:#f4f4f4;padding:12px;overflow:auto}</style></head><body><h1>Perfect Squares: BFS Levels vs Bottom-Up DP (and the Four-Square Shortcut)</h1>
+<h2>The problem</h2>
+<p>LeetCode 279: return the least number of perfect squares that sum to n. For 12 the answer is 3 (4 + 4 + 4); for 13 it is 2 (4 + 9).</p>
+<h2>Approach 1: bottom-up DP</h2>
+<p>dp[i] is the answer for i. dp[0] = 0, and dp[i] = 1 + min(dp[i - s]) over every square s &lt;= i. That is O(n * sqrt(n)) time and O(n) space, and it is the answer most interviewers expect first.</p>
+<pre><code>def numSquares(n):
+    squares = [k * k for k in range(1, int(n ** 0.5) + 1)]
+    dp = [0] + [n] * n
+    for i in range(1, n + 1):
+        for s in squares:
+            if s &gt; i:
+                break
+            dp[i] = min(dp[i], dp[i - s] + 1)
+    return dp[n]
+</code></pre>
+<h2>Approach 2: BFS by levels</h2>
+<p>Treat each remainder as a node and subtracting a square as an edge. The first BFS level that reaches 0 is the answer. Keep a visited set so each remainder is expanded once. In practice it stops early because the answer is never more than 4.</p>
+<h2>The shortcut worth mentioning</h2>
+<p>Lagrange's four-square theorem says every n is a sum of at most four squares, and Legendre's three-square theorem says n needs exactly four when n has the form 4^a(8b + 7). So: strip factors of 4; if the rest is 7 mod 8 return 4; if n is a square return 1; if n = a^2 + b^2 for some a return 2; otherwise 3. That is O(sqrt(n)).</p>
+<h2>How to present it</h2>
+<p>Lead with the DP, state its complexity, then mention BFS as an early-exit alternative, and only bring up the math shortcut as a follow-up. Interviewers score the clear DP higher than a memorized theorem you cannot justify.</p>
+<p>Practicing the explanation out loud is the hard part. <a href="https://www.linkjob.ai/">Linkjob AI</a> is an interview copilot that can help with that.</p>
+<p>Disclosure: I work on Linkjob AI.</p></body></html>
