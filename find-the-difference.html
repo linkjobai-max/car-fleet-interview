@@ -1,0 +1,22 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Find the Difference (LeetCode 389): Counting vs XOR</title><style>body{max-width:760px;margin:2rem auto;padding:0 1rem;font-family:system-ui,sans-serif;line-height:1.6}pre{background:#f4f4f4;padding:1rem;overflow:auto}</style></head><body><h1>Find the Difference (LeetCode 389): Counting vs XOR</h1>
+<p>String <code>t</code> is string <code>s</code> shuffled with one extra letter added. Find that letter.</p>
+<h2>Counting</h2>
+<pre><code class="language-python">from collections import Counter
+
+def find_the_difference(s: str, t: str) -&gt; str:
+    return next(iter(Counter(t) - Counter(s)))
+</code></pre>
+<p>O(n) time, O(1) space since the alphabet is 26 letters.</p>
+<h2>XOR trick</h2>
+<p>XOR every character code in both strings. Pairs cancel, leaving the extra character:</p>
+<pre><code class="language-python">def find_the_difference(s: str, t: str) -&gt; str:
+    x = 0
+    for c in s + t:
+        x ^= ord(c)
+    return chr(x)
+</code></pre>
+<h2>Sum trick</h2>
+<p><code>chr(sum(map(ord, t)) - sum(map(ord, s)))</code> also works and is easy to explain. In languages with fixed-width integers, XOR avoids any overflow worry.</p>
+<h2>Which to give</h2>
+<p>Lead with counting because it generalizes (several extra letters), then offer XOR as the constant-space flourish. Interviewers like hearing the trade-off. You can rehearse explaining trade-offs like this with <a href="https://www.linkjob.ai/interview-copilot/">interview copilot app</a>.</p>
+<p><em>Disclosure: I work on Linkjob AI.</em></p></body></html>
