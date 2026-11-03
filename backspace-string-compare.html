@@ -1,0 +1,35 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Backspace String Compare: The O(1) Space Two-Pointer Walk</title><meta name="description" content="Solve Backspace String Compare with a stack first, then with two pointers from the end in O(1) extra space."><style>body{max-width:760px;margin:40px auto;padding:0 16px;font-family:system-ui,sans-serif;line-height:1.6;color:#222}pre{background:#f5f5f5;padding:12px;overflow:auto}code{font-family:monospace}</style></head><body><h1>Backspace String Compare: The O(1) Space Two-Pointer Walk</h1>
+<p>Backspace String Compare asks whether two strings are equal after processing '#' as a backspace. The stack answer takes a minute; the follow-up, O(1) extra space, is what the interviewer is really waiting for.</p>
+<h2>Baseline: build both strings</h2>
+<p>Push characters onto a list and pop on '#'. Compare the results. Time O(n + m), space O(n + m). State it, then offer to improve the space.</p>
+<h2>The insight: read from the end</h2>
+<p>A backspace only affects characters before it, so scan each string from the right. Keep a count of pending backspaces; skip characters while the count is positive. The next character that survives is the next visible character from the right.</p>
+<h2>Code (Python)</h2>
+<pre><code>def backspace_compare(s, t):
+    def next_index(x, i):
+        skip = 0
+        while i &gt;= 0:
+            if x[i] == &#x27;#&#x27;:
+                skip += 1
+            elif skip:
+                skip -= 1
+            else:
+                break
+            i -= 1
+        return i
+
+    i, j = len(s) - 1, len(t) - 1
+    while True:
+        i, j = next_index(s, i), next_index(t, j)
+        if i &lt; 0 or j &lt; 0:
+            return i &lt; 0 and j &lt; 0
+        if s[i] != t[j]:
+            return False
+        i -= 1
+        j -= 1</code></pre>
+<h2>Edge cases</h2>
+<p>Backspaces at the start of a string do nothing, which the skip counter handles because it simply runs past index 0. Strings that are all backspaces become empty and compare equal to each other.</p>
+<h2>Complexity and talking points</h2>
+<p>Each index is visited once, so time is O(n + m) and extra space is O(1). The reusable idea is processing from the end when later characters modify earlier ones, which also appears in Merge Sorted Array.</p>
+<p>Disclosure: I work on <a href="https://www.linkjob.ai/coding-interview-copilot/">Linkjob AI's coding interview copilot</a>, which suggests follow-ups like this while you practise.</p>
+</body></html>
